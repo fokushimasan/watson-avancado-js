@@ -87,7 +87,7 @@
                                     <section>
                                         <div class="message" v-for="m in messages" :class="{ me: m.me }" v-html="$options.filters.messageFormat(m.text)"></div>
                                         <img src="https://loading.io/spinners/message/lg.messenger-typing-preloader.gif" v-if="loading" style="width: 50px"/>
-                                        <textarea :disabled="loading" placeholder="Envie uma mensagem..." @keypress.enter.prevent="sendMessage" v-model="message"></textarea>
+                                        <textarea id="textArea" :disabled="loading" placeholder="Envie uma mensagem..." @keypress.enter.prevent="sendMessage" v-model="message"></textarea>
                                     </section>
                                 </main>
                             </div>`,
@@ -114,11 +114,11 @@
                                 text: response.data.output.text
                             })
                             this.context = response.data.context;
-                            this.loading = false;
+                            this.loading = false;                            
                         } catch (error) {
                             console.error('Ops!', error)
                         }
-
+                        document.getElementById("textArea").focus()
                     }
                 },
                 filters: {
