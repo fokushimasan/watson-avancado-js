@@ -11,6 +11,17 @@ app.use(bodyParser.json())
 
 app.use(express.static(__dirname + '/public'))
 
+// variaveis de fonte desconhecida
+const sabores = {
+    Calabreza: {
+        valor: 15
+    },
+    Mussarela: {
+        valor: 12
+    }
+}
+const tempo_de_entrega = '30 minutos'
+
 const assistent = new watson.AssistantV1({
     username: watsonAuth.username,
     password: watsonAuth.password,
@@ -35,7 +46,9 @@ app.post('/dialog', (req, res) => {
             if (error) {
                 console.error(error)
             } else {
-                const { output } = response
+                if (response.intents[0] && response.intents[0].intent == 'pedido') {
+                    console.log('Estamos recebendo um pedido!')
+                }
                 return res.json(response)
             }
         }
