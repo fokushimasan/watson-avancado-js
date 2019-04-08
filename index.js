@@ -23,19 +23,20 @@ app.get('/', (req, res) => {
 } )
 
 app.post('/dialog', (req, res) => {
-    const { message } = req.body
+    const { message, context } = req.body
 
     assistent.message(
         {
             input: { text: message },
-            workspace_id: watsonAuth.workspace_id
+            workspace_id: watsonAuth.workspace_id,
+            context
         },
         function (error, response) {
             if (error) {
                 console.error(error)
             } else {
                 const { output } = response
-                return res.json(output.text)
+                return res.json(response)
             }
         }
     )

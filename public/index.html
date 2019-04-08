@@ -75,8 +75,9 @@
             Vue.component('app', {
                 data() {
                     return {
+                        cotext: {},
                         messages: [],
-                        message: '',
+                        message: null,
                         loading: false
                     }
                 },
@@ -92,12 +93,16 @@
                             </div>`,
                 methods: {
                     async sendMessage() {
-                        this.messages.push({
-                            me: true,
-                            text: this.message
-                        })
+                        if (this.message !== null) {
+                            this.messages.push({
+                                me: true,
+                                text: this.message
+                            })
+                        }
+                        
                         const data = {
-                            message: this.message
+                            message: this.message,
+                            context: this.context
                         }
                         this.message = '';
                         this.loading = true;
@@ -106,8 +111,9 @@
                             let response = await axios.post('http://localhost:3000/dialog', data)
                             this.messages.push({
                                 me: false,
-                                text: response.data
+                                text: response.data.output.text
                             })
+                            this.context = response.data.context;
                             this.loading = false;
                         } catch (error) {
                             console.error('Ops!', error)
@@ -128,6 +134,9 @@
                             return result;
                         }
                     }
+                },
+                mounted() {
+                    this.sendMessage()
                 }
             });
             new Vue({
